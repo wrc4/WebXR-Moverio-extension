@@ -19,7 +19,8 @@
     "file://*/*",
     "http://*/*",
     "https://*/*",
-    "storage"
+    "storage",
+    "nativeMessaging"
   ],
   "content_scripts": [{
     "matches": [

@@ -1,5 +1,30 @@
 const connections = {};
 
+// The name of my native messaging host
+const hostName = 'com.wrc4.moverio_windows_app';
+
+// Function to send a message to the host
+function sendMessageToNativeHost(message) {
+  chrome.runtime.sendNativeMessage(hostName, message, function (response) {
+    if (chrome.runtime.lastError) {
+      console.error('Error in sending message to host:', chrome.runtime.lastError);
+      return;
+    }
+    console.log('Received response from host:', response);
+  });
+}
+
+let port = chrome.runtime.connectNative(hostName);
+
+port.onMessage.addListener(function(msg) {
+  console.log("Received" + msg);
+  // port.postMessage({ text: "Hello, my_application" });
+});
+
+port.onDisconnect.addListener(function() {
+  console.log("Native Messaging Host Disconnected");
+});
+
 chrome.runtime.onConnect.addListener(port => {
   // @TODO: release connection when disconnected
 
