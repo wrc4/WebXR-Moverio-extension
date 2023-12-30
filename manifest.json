@@ -1,12 +1,12 @@
 {
-  "name": "WebXR API Emulator",
-  "short_name": "WebXR Emu",
-  "version": "0.3.3",
+  "name": "WebXR Moverio Connector",
+  "short_name": "WebXR Moverio",
+  "version": "0.0.1",
   "minimum_chrome_version": "10.0",
   "devtools_page": "src/extension/devtools.html",
-  "description": "WebXR API Emulator",
-  "homepage_url": "https://github.com/MozillaReality/WebXR-emulator-extension",
-  "author": "Takahiro Aoyagi",
+  "description": "WebXR Moverio Connector",
+  "homepage_url": "https://github.com/wrc4/WebXR-Moverio-extension",
+  "author": "Yilei Su",
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
@@ -42,7 +42,7 @@
       "48": "icons/icon48.png",
       "128": "icons/icon128.png"
     },
-    "default_title": "WebXR API Emulator",
+    "default_title": "WebXR Moverio Connector",
     "default_popup": "src/extension/popup.html"
   },
   "manifest_version": 2,
