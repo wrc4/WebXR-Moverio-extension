@@ -48,6 +48,35 @@ port.onMessage.addListener(message => {
   }
 });
 
+// Add an event listener for the message from background.js
+chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+  if (message.type === 'UPDATE_ORIENTATION') {
+    // Convert the quaternion to Euler angles
+    const quaternion = new THREE.Quaternion(
+      message.quaternion.x,
+      message.quaternion.y,
+      message.quaternion.z,
+      message.quaternion.w
+    );
+
+    // Create a new Euler object
+    const euler = new THREE.Euler().setFromQuaternion(quaternion, 'XYZ');
+
+    // Now you have the Euler angles
+    updateHeadsetRotation(euler);
+  }
+});
+
+function updateHeadsetRotation(euler) {
+  // Update the headset's rotation with the new Euler angles
+  const headset = assetNodes[DEVICE.HEADSET];
+  if (!headset) { return; }
+  headset.rotation.copy(euler);
+  updateDevicePropertyContent('headsetPosition', 'headsetRotation',
+    headset.position, headset.rotation);
+}
+//-----------
+
 // send message to contentScript via background
 
 const postMessage = (message) => {
@@ -733,6 +762,19 @@ document.getElementById('leftSqueezeButton').addEventListener('click', event => 
 }, false);
 
 document.getElementById('resetPoseButton').addEventListener('click', event => {
+
+
+  console.log('Testing:');
+  // const hostName = 'com.wrc4.moverio_host';
+  // chrome.runtime.sendNativeMessage(hostName, {message: 1234}, response => {
+  //   if (chrome.runtime.lastError) {
+  //     console.error('Error in sending message to host:', chrome.runtime.lastError);
+  //     return;
+  //   }
+  //   console.log('Received response from host:', response);
+  // });
+
+
   for (const key in assetNodes) {
     const device = assetNodes[key];
 
@@ -755,6 +797,8 @@ document.getElementById('resetPoseButton').addEventListener('click', event => {
   updateControllerPropertyComponent(DEVICE.LEFT_CONTROLLER);
   notifyPoses();
   render();
+
+  
 }, false);
 
 document.getElementById('exitButton').addEventListener('click', event => {

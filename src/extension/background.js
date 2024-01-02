@@ -1,37 +1,41 @@
 const connections = {};
 
 // The name of my native messaging host
-// const hostName = 'com.wrc4.moverio_host';
-const hostName = 'com.wrc4.moverio_windows_app';
-
-// Function to send a message to the host
-const sendMessageToNativeHost = (message) => {
-  chrome.runtime.sendNativeMessage(hostName, {message: 1}, response => {
-    if (chrome.runtime.lastError) {
-      console.error('Error in sending message to host:', chrome.runtime.lastError);
-      return;
-    }
-    console.log('Received response from host:', response);
-  });
-}
+const hostName = 'com.wrc4.moverio_host';
 
 let nmh = chrome.runtime.connectNative(hostName);
 
-chrome.runtime.onConnectNative.addListener(port => {
-  console.log('Connected to native messaging host.');
+nmh.onMessage.addListener(function(msg) {
+  console.log('Received message from host: ', msg);
+  // document.getElementById('response').innerText = JSON.stringify(msg);
 
-  port.onMessage.addListener(msg => {
-    console.log('Received message from host:', msg);
-    // Handle the incoming message
-  });
-
-  port.onDisconnect.addListener(() => {
-    console.log('Disconnected from the native messaging host.');
-  });
-
-  // Send a message to the native host if needed
-  port.postMessage({ text: 'Hello from extension' });
+  // Send the quaternion to other parts of the extension
+  chrome.runtime.sendMessage({ type: 'UPDATE_ORIENTATION', quaternion: msg });
 });
+
+// Handle disconnection
+nmh.onDisconnect.addListener(function() {
+  console.log('Disconnected from the native host.');
+  // document.getElementById('response').innerText = 'Disconnected.';
+});
+
+// chrome.runtime.onConnectNative.addListener(port => {
+//   console.log('Connected to native messaging host.');
+
+//   port.onMessage.addListener(msg => {
+//     console.log('Received message from host:', msg);
+//     // Handle the incoming message
+//   });
+
+//   port.onDisconnect.addListener(() => {
+//     console.log('Disconnected from the native messaging host.');
+//   });
+
+//   // Send a message to the native host if needed
+//   setTimeout(()=>{
+//     port.postMessage({ text: 'Hello from extension' });
+//   }, 5000);
+// });
 
 chrome.runtime.onConnect.addListener(port => {
   // @TODO: release connection when disconnected
