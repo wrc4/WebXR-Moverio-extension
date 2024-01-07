@@ -59,6 +59,15 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
       message.quaternion.w
     );
 
+    // Create a quaternion representing a 90-degree rotation around the Z-axis
+    let correctionQuaternion = new THREE.Quaternion();
+    // correctionQuaternion.setFromAxisAngle(new THREE.Vector3(0, 0, 1), THREE.Math.degToRad(-90));
+    correctionQuaternion.setFromEuler(new THREE.Euler(THREE.Math.degToRad(-90),0,THREE.Math.degToRad(-90)));
+  
+    // Apply the correction by multiplying the sensor's quaternion by the correction quaternion
+    // The order of multiplication matters: the correction must be applied first
+    quaternion.premultiply(correctionQuaternion);
+    
     // Create a new Euler object
     const euler = new THREE.Euler().setFromQuaternion(quaternion, 'XYZ');
 
@@ -74,6 +83,13 @@ function updateHeadsetRotation(euler) {
   headset.rotation.copy(euler);
   updateDevicePropertyContent('headsetPosition', 'headsetRotation',
     headset.position, headset.rotation);
+
+  postMessage({
+    action: 'webxr-pose',
+    position: headset.position.toArray([]), // @TODO: reuse array
+    quaternion: headset.quaternion.toArray([]) // @TODO: reuse array
+  });
+  // render();
 }
 //-----------
 
