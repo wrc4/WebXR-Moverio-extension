@@ -1,9 +1,53 @@
+const headset = new THREE.Object3D();
+headset.position.copy(new THREE.Vector3(0, 1.6, 0));
+headset.rotation.copy(new THREE.Euler(0, 0, 0));
+
 const port = chrome.runtime.connect({name: 'contentScript'});
+
+console.log('content-script.js: loaded!');
 
 const dispatchCustomEvent = (type, detail) => {
   window.dispatchEvent(new CustomEvent(type, {
     detail: typeof cloneInto !== 'undefined' ? cloneInto(detail, window) : detail
   }));
+};
+
+// Add an event listener for the message from background.js
+// chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+const moverioPose = (q) => {
+  //console.log('chrome.runtime.onMessage: Received message from backgroung.js: ', message);
+  //if (message.type === 'UPDATE_ORIENTATION') {
+    // Convert the quaternion to Euler angles
+    const quaternion = new THREE.Quaternion(
+      q.x,
+      q.y,
+      q.z,
+      q.w
+    );
+
+    // Create a quaternion representing a 90-degree rotation around the Z-axis
+    let correctionQuaternion = new THREE.Quaternion();
+    // correctionQuaternion.setFromAxisAngle(new THREE.Vector3(0, 0, 1), THREE.Math.degToRad(-90));
+    correctionQuaternion.setFromEuler(new THREE.Euler(THREE.Math.degToRad(-90),0,THREE.Math.degToRad(-90)));
+  
+    // Apply the correction by multiplying the sensor's quaternion by the correction quaternion
+    // The order of multiplication matters: the correction must be applied first
+    quaternion.premultiply(correctionQuaternion);
+    
+    // Create a new Euler object
+    const euler = new THREE.Euler().setFromQuaternion(quaternion, 'XYZ');
+
+    // Update the headset's rotation with the new Euler angles
+    headset.rotation.copy(euler);
+
+    console.dir(headset.position.toArray([]));
+    console.dir(headset.quaternion.toArray([]));
+
+    dispatchCustomEvent('webxr-pose', {
+      position: headset.position.toArray([]),
+      quaternion: headset.quaternion.toArray([])
+    });
+  //}
 };
 
 // receive message from panel via background
@@ -48,6 +92,11 @@ port.onMessage.addListener(message => {
 
     case 'webxr-exit-immersive':
       dispatchCustomEvent('webxr-exit-immersive', {});
+      break;
+
+    case 'moverio-pose':
+      console.log('port.onMessage: Received message from backgroung.js: ', message.quaternion);
+      moverioPose(message.quaternion)
       break;
   }
 });

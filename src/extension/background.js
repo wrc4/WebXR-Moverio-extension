@@ -1,4 +1,5 @@
-const connections = {};
+const connections = [];//{};
+let contentScriptPort = undefined;
 
 // The name of my native messaging host
 const hostName = 'com.wrc4.moverio_host';
@@ -10,7 +11,19 @@ nmh.onMessage.addListener(function(msg) {
   // document.getElementById('response').innerText = JSON.stringify(msg);
 
   // Send the quaternion to other parts of the extension
-  chrome.runtime.sendMessage({ type: 'UPDATE_ORIENTATION', quaternion: msg });
+  // chrome.runtime.sendMessage({ type: 'UPDATE_ORIENTATION', quaternion: msg });
+
+  // postMessageToPorts(portMap.contentScript, {});
+  //connections.forEach(connection => {
+    // console.log('postMessage to ', connection.contentScript);
+  //  postMessageToPorts(connection.contentScript, {action: 'moverio-pose', quaternion: msg });
+    // connection.contentScript.postMessage({action: 'xxx'});
+  //});
+  if (contentScriptPort != undefined) {
+    contentScriptPort.postMessage({action: 'moverio-pose', quaternion: msg });
+    console.log('Sent message to contentScript: ');
+  }
+  
 });
 
 // Handle disconnection
@@ -39,6 +52,7 @@ nmh.onDisconnect.addListener(function() {
 
 chrome.runtime.onConnect.addListener(port => {
   // @TODO: release connection when disconnected
+  console.log('Adding port: ', port);
 
   port.onMessage.addListener((message, sender, reply) => {
     const tabId = message.tabId !== undefined ? message.tabId : sender.sender.tab.id;
@@ -47,7 +61,10 @@ chrome.runtime.onConnect.addListener(port => {
       connections[tabId] = {};
     }
 
+    console.log('tabId: ', tabId);
     const portMap = connections[tabId];
+    console.log('connections: ', connections);
+    console.log('port.name: ', port.name);
 
     // Can be multiple content scripts per tab
     // for example if a web page includes iframe.
@@ -73,12 +90,19 @@ chrome.runtime.onConnect.addListener(port => {
 
     // transfer message between panel and contentScripts of the same tab
 
-    if (port.name === 'panel') {
-      postMessageToPorts(portMap.contentScript, message);
-    }
+    // console.log('transfer message via portMap: ', portMap)
+
     if (port.name === 'contentScript') {
-      postMessageToPorts(portMap.panel, message);
+
+      contentScriptPort = portMap.contentScript[0];
+      console.log('portMap.contentScript: ', contentScriptPort)
     }
+    // if (port.name === 'panel') {
+    //   postMessageToPorts(portMap.contentScript, message);
+    // }
+    // if (port.name === 'contentScript') {
+    //   postMessageToPorts(portMap.panel, message);
+    // }
   });
 });
 

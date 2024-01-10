@@ -48,34 +48,6 @@ port.onMessage.addListener(message => {
   }
 });
 
-// Add an event listener for the message from background.js
-chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
-  if (message.type === 'UPDATE_ORIENTATION') {
-    // Convert the quaternion to Euler angles
-    const quaternion = new THREE.Quaternion(
-      message.quaternion.x,
-      message.quaternion.y,
-      message.quaternion.z,
-      message.quaternion.w
-    );
-
-    // Create a quaternion representing a 90-degree rotation around the Z-axis
-    let correctionQuaternion = new THREE.Quaternion();
-    // correctionQuaternion.setFromAxisAngle(new THREE.Vector3(0, 0, 1), THREE.Math.degToRad(-90));
-    correctionQuaternion.setFromEuler(new THREE.Euler(THREE.Math.degToRad(-90),0,THREE.Math.degToRad(-90)));
-  
-    // Apply the correction by multiplying the sensor's quaternion by the correction quaternion
-    // The order of multiplication matters: the correction must be applied first
-    quaternion.premultiply(correctionQuaternion);
-    
-    // Create a new Euler object
-    const euler = new THREE.Euler().setFromQuaternion(quaternion, 'XYZ');
-
-    // Now you have the Euler angles
-    updateHeadsetRotation(euler);
-  }
-});
-
 function updateHeadsetRotation(euler) {
   // Update the headset's rotation with the new Euler angles
   const headset = assetNodes[DEVICE.HEADSET];
