@@ -7,48 +7,23 @@ const hostName = 'com.wrc4.moverio_host';
 let nmh = chrome.runtime.connectNative(hostName);
 
 nmh.onMessage.addListener(function(msg) {
-  console.log('Received message from host: ', msg);
-  // document.getElementById('response').innerText = JSON.stringify(msg);
-
-  // Send the quaternion to other parts of the extension
-  // chrome.runtime.sendMessage({ type: 'UPDATE_ORIENTATION', quaternion: msg });
+  // console.log('Received message from host: ', msg);
 
   // postMessageToPorts(portMap.contentScript, {});
   //connections.forEach(connection => {
     // console.log('postMessage to ', connection.contentScript);
   //  postMessageToPorts(connection.contentScript, {action: 'moverio-pose', quaternion: msg });
-    // connection.contentScript.postMessage({action: 'xxx'});
   //});
   if (contentScriptPort != undefined) {
     contentScriptPort.postMessage({action: 'moverio-pose', quaternion: msg });
-    console.log('Sent message to contentScript: ');
-  }
-  
+    // console.log('Sent message to contentScript: ');
+  }  
 });
 
 // Handle disconnection
 nmh.onDisconnect.addListener(function() {
   console.log('Disconnected from the native host.');
-  // document.getElementById('response').innerText = 'Disconnected.';
 });
-
-// chrome.runtime.onConnectNative.addListener(port => {
-//   console.log('Connected to native messaging host.');
-
-//   port.onMessage.addListener(msg => {
-//     console.log('Received message from host:', msg);
-//     // Handle the incoming message
-//   });
-
-//   port.onDisconnect.addListener(() => {
-//     console.log('Disconnected from the native messaging host.');
-//   });
-
-//   // Send a message to the native host if needed
-//   setTimeout(()=>{
-//     port.postMessage({ text: 'Hello from extension' });
-//   }, 5000);
-// });
 
 chrome.runtime.onConnect.addListener(port => {
   // @TODO: release connection when disconnected
