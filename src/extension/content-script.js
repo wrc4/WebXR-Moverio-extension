@@ -127,15 +127,16 @@ window.addEventListener('device-leave-immersive', event => {
 // Set up listeners for requests coming from EmulatedXRDevice.
 // Send back the response with the result.
 
-window.addEventListener('webxr-virtual-room-request', event => {
-  fetch(chrome.runtime.getURL('assets/hall_empty.glb')).then(response => {
-    return response.arrayBuffer();
-  }).then(buffer => {
-    dispatchCustomEvent('webxr-virtual-room-response', {
-      buffer: buffer
-    });
-  });
-}, false);
+//// Disable webxr-virtual-room
+// window.addEventListener('webxr-virtual-room-request', event => {
+//   fetch(chrome.runtime.getURL('assets/hall_empty.glb')).then(response => {
+//     return response.arrayBuffer();
+//   }).then(buffer => {
+//     dispatchCustomEvent('webxr-virtual-room-response', {
+//       buffer: buffer
+//     });
+//   });
+// }, false);
 
 
 // function to load script in a web page
