@@ -136,3 +136,12 @@ Thanks to [WebVR-Extension project](https://github.com/spite/WebVR-Extension), i
 ## License
 
 Mozilla Public License Version 2.0
+
+
+## Mods:
+
+Manifest V3:
+  "background": {
+    "scripts": ["src/extension/background.js"],
+    "type": "module"
+  },
