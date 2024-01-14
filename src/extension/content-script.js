@@ -19,12 +19,12 @@ const moverioPose = (q) => {
   const quaternion = new THREE.Quaternion(q.x, q.y, q.z, q.w);
 
   // Create a quaternion representing a 90-degree rotation around the Z-axis
-  let correctionQuaternion = new THREE.Quaternion();
-  correctionQuaternion.setFromEuler(new THREE.Euler(THREE.Math.degToRad(-90),0,THREE.Math.degToRad(-90)));
+  // let correctionQuaternion = new THREE.Quaternion();
+  // correctionQuaternion.setFromEuler(new THREE.Euler(THREE.Math.degToRad(-90),0,THREE.Math.degToRad(-90)));
 
   // Apply the correction by multiplying the sensor's quaternion by the correction quaternion
   // The order of multiplication matters: the correction must be applied first
-  quaternion.premultiply(correctionQuaternion);
+  // quaternion.premultiply(correctionQuaternion);
   
   // Create a new Euler object
   const euler = new THREE.Euler().setFromQuaternion(quaternion, 'XYZ');
