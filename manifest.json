@@ -31,7 +31,6 @@
     "js": [
       "polyfill/webxr-polyfill.js",
       "src/ConfigurationManager.js",
-      "src/app/three/three.js", 
       "src/extension/content-script.js"
     ],
     "run_at": "document_start",

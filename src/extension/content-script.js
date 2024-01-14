@@ -141,9 +141,9 @@ ConfigurationManager.createFromJsonFile('src/devices.json').then(manager => {
       deviceDefinition: manager.deviceDefinition,
       stereoEffect: manager.stereoEffect
     });
-    port.postMessage({
-      action: 'webxr-startup'
-    });
+    // port.postMessage({
+    //   action: 'webxr-startup'
+    // });
   });
 }).catch(error => {
   console.error(error);
