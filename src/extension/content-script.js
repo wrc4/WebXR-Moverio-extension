@@ -131,51 +131,39 @@ loadScript(`
   })();
 `);
 
-// No synchronous storage and fetch APIs so reluctantly
-// reflecting configuration asynchronously
-
-ConfigurationManager.createFromJsonFile('src/devices.json').then(manager => {
-  manager.loadFromStorage().then(() => {
-    // send the configuration parameters to the polyfill as an event
-    dispatchCustomEvent('webxr-device-init', {
-      deviceDefinition: {
-        "id": "Oculus Quest",
-        "name": "Oculus Quest",
-        "modes": [
-          "inline",
-          "immersive-vr"
-        ],
-        "headset": {
-          "hasPosition": true,
-          "hasRotation": true
-        },
-        "controllers": [
-          {
-            "id": "Oculus Touch V2 (Right)",
-            "buttonNum": 7,
-            "primaryButtonIndex": 0,
-            "primarySqueezeButtonIndex": 1,
-            "hasPosition": true,
-            "hasRotation": true,
-            "hasSqueezeButton": true
-          },
-          {
-            "id": "Oculus Touch V2 (Left)",
-            "buttonNum": 7,
-            "primaryButtonIndex": 0,
-            "primarySqueezeButtonIndex": 1,
-            "hasPosition": true,
-            "hasRotation": true,
-            "hasSqueezeButton": true
-          }
-        ]
+// send the configuration parameters to the polyfill as an event
+dispatchCustomEvent('webxr-device-init', {
+  deviceDefinition: {
+    "id": "Oculus Quest",
+    "name": "Oculus Quest",
+    "modes": [
+      "inline",
+      "immersive-vr"
+    ],
+    "headset": {
+      "hasPosition": true,
+      "hasRotation": true
+    },
+    "controllers": [
+      {
+        "id": "Oculus Touch V2 (Right)",
+        "buttonNum": 7,
+        "primaryButtonIndex": 0,
+        "primarySqueezeButtonIndex": 1,
+        "hasPosition": true,
+        "hasRotation": true,
+        "hasSqueezeButton": true
       },
-      stereoEffect: true
-    });
-    // port.postMessage({
-    //   action: 'webxr-startup'
-    // });
-  });
-}).catch(error => {
-  console.error(error);
+      {
+        "id": "Oculus Touch V2 (Left)",
+        "buttonNum": 7,
+        "primaryButtonIndex": 0,
+        "primarySqueezeButtonIndex": 1,
+        "hasPosition": true,
+        "hasRotation": true,
+        "hasSqueezeButton": true
+      }
+    ]
+  },
+  stereoEffect: true
 });
