@@ -27,17 +27,17 @@ const moverioPose = (q) => {
   // quaternion.premultiply(correctionQuaternion);
   
   // Create a new Euler object
-  const euler = new THREE.Euler().setFromQuaternion(quaternion, 'XYZ');
+  //const euler = new THREE.Euler().setFromQuaternion(quaternion, 'XYZ');
 
   // Update the headset's rotation with the new Euler angles
-  headset.rotation.copy(euler);
+  //headset.rotation.copy(euler);
 
   // console.dir(headset.position.toArray([]));
   // console.dir(headset.quaternion.toArray([]));
 
   dispatchCustomEvent('webxr-pose', {
-    position: headset.position.toArray([]),
-    quaternion: headset.quaternion.toArray([])
+    position: [0, 1.6, 0],
+    quaternion: [q.x, q.y, q.z, q.w]
   });
 };
 
