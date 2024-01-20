@@ -12,14 +12,14 @@
     "128": "icons/icon128.png"
   },
   "background": {
-    "scripts": ["src/extension/background.js"]
+    "service_worker": "src/extension/background.js"
   },
   "permissions": [
-    "file://*/*",
-    "http://*/*",
-    "https://*/*",
     "nativeMessaging"
   ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self';"
+  },
   "content_scripts": [{
     "matches": [
       "file://*/*",
@@ -32,13 +32,5 @@
     "run_at": "document_start",
     "all_frames": true
   }],
-  "browser_action": {
-    "default_icon": {
-      "16": "icons/icon16.png",
-      "48": "icons/icon48.png",
-      "128": "icons/icon128.png"
-    },
-    "default_title": "Moverio Connector"
-  },
-  "manifest_version": 2
+  "manifest_version": 3
 }
