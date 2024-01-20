@@ -1,8 +1,8 @@
 {
   "name": "Moverio Connector",
   "short_name": "Moverio Connector",
-  "version": "1.0.0",
-  "minimum_chrome_version": "10.0",
+  "version": "1.0.1",
+  "minimum_chrome_version": "88",
   "description": "WebXR Moverio Connector",
   "homepage_url": "https://github.com/wrc4/WebXR-Moverio-extension",
   "author": "Yilei Su",
@@ -12,13 +12,14 @@
     "128": "icons/icon128.png"
   },
   "background": {
-    "scripts": ["src/extension/background.js"]
+    "service_worker": "src/extension/background.js"
   },
   "permissions": [
-    "file://*/*",
-    "http://*/*",
-    "https://*/*",
     "nativeMessaging"
+  ],
+  "host_permissions": [
+    "http://*/*", 
+    "https://*/*"
   ],
   "content_scripts": [{
     "matches": [
@@ -27,19 +28,8 @@
       "https://*/*"
     ],
     "js": [
-      "polyfill/webxr-polyfill.js",
       "src/extension/content-script.js"
-    ],
-    "run_at": "document_start",
-    "all_frames": true
+    ]
   }],
-  "browser_action": {
-    "default_icon": {
-      "16": "icons/icon16.png",
-      "48": "icons/icon48.png",
-      "128": "icons/icon128.png"
-    },
-    "default_title": "Moverio Connector"
-  },
-  "manifest_version": 2
+  "manifest_version": 3
 }
