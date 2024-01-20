@@ -16,7 +16,7 @@ nmh.onMessage.addListener(function(msg) {
   //});
   if (contentScriptPort != undefined) {
     contentScriptPort.postMessage({action: 'moverio-pose', quaternion: msg });
-    // console.log('Sent message to contentScript: ');
+    console.log('Sent message to contentScript: ');
   }  
 });
 
@@ -28,6 +28,11 @@ nmh.onDisconnect.addListener(function() {
 chrome.runtime.onConnect.addListener(port => {
   // @TODO: release connection when disconnected
   console.log('Adding port: ', port);
+
+  if (port.name === 'contentScript') {
+    contentScriptPort = port;
+    console.log('portMap.contentScript: ', contentScriptPort)
+  }
 
   port.onMessage.addListener((message, sender, reply) => {
     const tabId = message.tabId !== undefined ? message.tabId : sender.sender.tab.id;
@@ -67,11 +72,11 @@ chrome.runtime.onConnect.addListener(port => {
 
     // console.log('transfer message via portMap: ', portMap)
 
-    if (port.name === 'contentScript') {
+    // if (port.name === 'contentScript') {
 
-      contentScriptPort = portMap.contentScript[0];
-      console.log('portMap.contentScript: ', contentScriptPort)
-    }
+    //   contentScriptPort = portMap.contentScript[0];
+    //   console.log('portMap.contentScript: ', contentScriptPort)
+    // }
     // if (port.name === 'panel') {
     //   postMessageToPorts(portMap.contentScript, message);
     // }

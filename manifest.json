@@ -27,7 +27,6 @@
       "https://*/*"
     ],
     "js": [
-      "polyfill/webxr-polyfill.js",
       "src/extension/content-script.js"
     ],
     "run_at": "document_start",

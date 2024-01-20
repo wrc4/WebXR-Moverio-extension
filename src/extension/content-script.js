@@ -1,18 +1,19 @@
 const port = chrome.runtime.connect({name: 'contentScript'});
 
 // console.log('content-script.js: loaded!');
-
+/*
 const dispatchCustomEvent = (type, detail) => {
   window.dispatchEvent(new CustomEvent(type, {
     detail: typeof cloneInto !== 'undefined' ? cloneInto(detail, window) : detail
   }));
 };
-
+*/
 // receive message from panel via background
 // and transfer to polyfill as event on window
 
 port.onMessage.addListener(message => {
   switch (message.action) {
+    /*
     case 'webxr-device':
       dispatchCustomEvent('webxr-device', {
         deviceDefinition: message.deviceDefinition
@@ -51,20 +52,21 @@ port.onMessage.addListener(message => {
     case 'webxr-exit-immersive':
       dispatchCustomEvent('webxr-exit-immersive', {});
       break;
-
+    */
     case 'moverio-pose':
-      // console.log('port.onMessage: Received message from backgroung.js: ', message.quaternion);
-      dispatchCustomEvent('webxr-pose', {
-        position: [0, 1.6, 0],
-        quaternion: [message.quaternion.x, message.quaternion.y, message.quaternion.z, message.quaternion.w]
-      });
+      console.log('port.onMessage: Received message from backgroung.js: ', message.quaternion);
+      window.postMessage({ type: 'UPDATE_ORIENTATION', quaternion: message.quaternion }, '*');
+      // dispatchCustomEvent('webxr-pose', {
+      //   position: [0, 1.6, 0],
+      //   quaternion: [message.quaternion.x, message.quaternion.y, message.quaternion.z, message.quaternion.w]
+      // });
       break;
   }
 });
 
 // Set up listeners for events coming from EmulatedXRDevice.
 // Transfer to panel via background.
-
+/*
 window.addEventListener('device-pose', event => {
   port.postMessage({
     action: 'device-pose',
@@ -93,7 +95,7 @@ window.addEventListener('device-leave-immersive', event => {
     action: 'device-leave-immersive'
   });
 }, false);
-
+*/
 // Set up listeners for requests coming from EmulatedXRDevice.
 // Send back the response with the result.
 
@@ -110,7 +112,7 @@ window.addEventListener('device-leave-immersive', event => {
 
 
 // function to load script in a web page
-
+/*
 const loadScript = source => {
   const script = document.createElement('script');
   script.textContent = source;
@@ -167,3 +169,4 @@ dispatchCustomEvent('webxr-device-init', {
   },
   stereoEffect: true
 });
+*/
