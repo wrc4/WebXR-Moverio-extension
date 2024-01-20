@@ -1,8 +1,8 @@
 {
   "name": "Moverio Connector",
   "short_name": "Moverio Connector",
-  "version": "1.0.0",
-  "minimum_chrome_version": "10.0",
+  "version": "1.0.1",
+  "minimum_chrome_version": "88",
   "description": "WebXR Moverio Connector",
   "homepage_url": "https://github.com/wrc4/WebXR-Moverio-extension",
   "author": "Yilei Su",
@@ -17,9 +17,10 @@
   "permissions": [
     "nativeMessaging"
   ],
-  "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'self';"
-  },
+  "host_permissions": [
+    "http://*/*", 
+    "https://*/*"
+  ],
   "content_scripts": [{
     "matches": [
       "file://*/*",
@@ -28,9 +29,7 @@
     ],
     "js": [
       "src/extension/content-script.js"
-    ],
-    "run_at": "document_start",
-    "all_frames": true
+    ]
   }],
   "manifest_version": 3
 }
