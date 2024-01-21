@@ -23,6 +23,7 @@ nmh.onMessage.addListener(function(msg) {
 // Handle disconnection
 nmh.onDisconnect.addListener(function() {
   console.log('Disconnected from the native host.');
+  contentScriptPort = undefined;
 });
 
 chrome.runtime.onConnect.addListener(port => {
